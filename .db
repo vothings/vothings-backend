@@ -1,0 +1,20 @@
+CREATE TABLE users(
+    ID UUID,
+    full_name VARCHAR(50),
+    email VARCHAR(50) UNIQUE,
+    user_name VARCHAR(50),
+    Password VARCHAR(100),
+    Role VARCHAR(50),
+    PRIMARY KEY (id)
+);
+CREATE TABLE candidates(
+    ID UUID PRIMARY KEY,
+    name VARCHAR(50)
+);
+CREATE TABLE votes(
+    ID UUID PRIMARY KEY,
+    candidate_id UUID,
+    user_id UUID,
+    CONSTRAINT fk_candidate_id FOREIGN KEY(candidate_id) REFERENCES candidates(ID),
+    CONSTRAINT fk_user_id FOREIGN KEY(user_id) REFERENCES users(ID)
+);
