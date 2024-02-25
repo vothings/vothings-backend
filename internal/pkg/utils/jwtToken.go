@@ -2,22 +2,24 @@ package utils
 
 import (
 	"fmt"
-	"vothings/internal/app/domain"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
 type Jwt struct {
-	cfg *domain.Configs
+	IssuerName      string
+	JwtSignatureKey []byte
+	JwtLifeTime     time.Duration
 }
 
 func (j *Jwt) GenerateToken(username, role string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"username": username,
 		"role":     role,
-		"exp":      j.cfg.JwtLifeTime,
+		"exp":      j.JwtLifeTime,
 	})
-	tokenString, err := token.SignedString(j.cfg.JwtSignatureKey)
+	tokenString, err := token.SignedString(j.JwtSignatureKey)
 	if err != nil {
 		return "", err
 	}
@@ -27,7 +29,7 @@ func (j *Jwt) GenerateToken(username, role string) (string, error) {
 func (j *Jwt) VerivyToken(tokenString string) (jwt.MapClaims, error) {
 	claims := jwt.MapClaims{}
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(t *jwt.Token) (interface{}, error) {
-		return j.cfg.JwtSignatureKey, nil
+		return j.JwtSignatureKey, nil
 	})
 
 	if err != nil {
@@ -42,8 +44,10 @@ func (j *Jwt) VerivyToken(tokenString string) (jwt.MapClaims, error) {
 	return claims, nil
 }
 
-func NewJwtToken(cfg *domain.Configs) *Jwt {
+func NewJwtToken(IssuerName string, JwtSignatureKey []byte, JwtLifeTime time.Duration) *Jwt {
 	return &Jwt{
-		cfg: cfg,
+		IssuerName:      IssuerName,
+		JwtSignatureKey: JwtSignatureKey,
+		JwtLifeTime:     JwtLifeTime,
 	}
 }

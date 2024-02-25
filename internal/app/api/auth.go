@@ -30,7 +30,7 @@ func (a *AuthApi) Register(ctx *fiber.Ctx) error {
 
 	if err := ctx.BodyParser(&user); err != nil {
 		log.Println(err)
-		return ctx.SendStatus(400)
+		return ctx.Status(400).JSON(fiber.Map{"message": "error when parsing data"})
 	}
 
 	if err := a.userService.Register(user); err != nil {
@@ -46,7 +46,7 @@ func (a *AuthApi) Login(ctx *fiber.Ctx) error {
 
 	if err := ctx.BodyParser(&userRequest); err != nil {
 		log.Println(err)
-		return ctx.SendStatus(400)
+		return ctx.Status(400).JSON(fiber.Map{"message": "error when parsing data"})
 	}
 
 	token, err := a.userService.Login(userRequest)

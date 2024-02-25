@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"vothings/internal/app/dto"
 	"vothings/internal/app/model"
-	"vothings/internal/app/utils"
+	"vothings/internal/pkg/utils"
 
 	"golang.org/x/crypto/bcrypt"
 )

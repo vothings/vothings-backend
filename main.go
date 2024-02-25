@@ -1,21 +1,26 @@
 package main
 
 import (
+	"log"
 	"vothings/configs"
 	"vothings/internal/app/api"
-	"vothings/internal/app/driver"
 	"vothings/internal/app/middleware"
 	"vothings/internal/app/repository"
 	"vothings/internal/app/service"
-	"vothings/internal/app/utils"
+	"vothings/internal/pkg/driver"
+	"vothings/internal/pkg/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 	cfg := configs.LoadCfg()
-	jwt := utils.NewJwtToken(cfg)
-	db := driver.GetConnectionPostgres(cfg)
+	jwt := utils.NewJwtToken(cfg.IssuerName, cfg.JwtSignatureKey, cfg.JwtLifeTime)
+	db, err := driver.GetConnectionPostgres(cfg)
+
+	if err != nil {
+		log.Fatalf("error when open connection postgres: %s", err)
+	}
 
 	candidateRepo := repository.NewCandidateRepository(db)
 	voteRepo := repository.NewVoteRepository(db)

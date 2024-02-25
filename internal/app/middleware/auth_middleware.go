@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
-	"vothings/internal/app/utils"
+	"vothings/internal/pkg/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
