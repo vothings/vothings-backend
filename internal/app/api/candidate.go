@@ -25,7 +25,7 @@ func (c *candidateApi) Createcandidate(ctx *fiber.Ctx) error {
 	var candidate dto.CandidateDtoRequest
 
 	if err := ctx.BodyParser(&candidate); err != nil {
-		return ctx.Status(400).JSON(fiber.Map{"message": "error when parsing data"})
+		return ctx.Status(400).JSON(fiber.Map{"message": "failed to read data"})
 	}
 
 	if err := c.service.CreateCandidate(candidate); err != nil {
@@ -38,7 +38,7 @@ func (c *candidateApi) GetAllcandidate(ctx *fiber.Ctx) error {
 	candidates, err := c.service.GetAllCandidate()
 
 	if err != nil {
-		return ctx.Status(400).JSON(fiber.Map{"message": "error when parsing data"})
+		return ctx.Status(400).JSON(fiber.Map{"message": "failed to read data"})
 	}
 
 	return ctx.Status(200).JSON(candidates)
@@ -54,7 +54,7 @@ func (c *candidateApi) Updatecandidate(ctx *fiber.Ctx) error {
 	}
 
 	if err := ctx.BodyParser(&candidate); err != nil {
-		return ctx.Status(400).JSON(fiber.Map{"message": "error when parsing data"})
+		return ctx.Status(400).JSON(fiber.Map{"message": "failed to read data"})
 	}
 
 	if err := c.service.UpdateCandidate(id, candidate); err != nil {

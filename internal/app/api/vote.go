@@ -20,11 +20,11 @@ func (v *votesApi) CreateVotes(ctx *fiber.Ctx) error {
 	var votesData dto.VoteDtoRequest
 
 	if err := ctx.BodyParser(&votesData); err != nil {
-		return ctx.SendStatus(400)
+		return ctx.Status(400).JSON(fiber.Map{"message": "failed to read data"})
 	}
 
 	if err := v.service.CreateVote(votesData); err != nil {
-		return ctx.SendStatus(400)
+		return ctx.Status(500).JSON(fiber.Map{"message": "internal server error"})
 	}
 	return ctx.Status(200).JSON(fiber.Map{"message": "vote created successfuly"})
 }
