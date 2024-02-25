@@ -16,26 +16,24 @@ import (
 func main() {
 	cfg := configs.LoadCfg()
 	jwt := utils.NewJwtToken(cfg.IssuerName, cfg.JwtSignatureKey, cfg.JwtLifeTime)
-	db, err := driver.GetConnectionPostgres(cfg)
 
+	db, err := driver.GetConnectionPostgres(cfg)
 	if err != nil {
 		log.Fatalf("error when open connection postgres: %s", err)
 	}
 
 	candidateRepo := repository.NewCandidateRepository(db)
 	voteRepo := repository.NewVoteRepository(db)
-	repo := repository.NewRepository(db)
+	userRepo := repository.NewRepository(db)
 
-	serviceCandidate := service.NewCandidateService(candidateRepo)
-	serviceVote := service.NewVoteService(voteRepo)
-	service := service.NewUserService(repo, *jwt)
+	service := service.NewUserService(userRepo, *jwt)
 
 	middleware := middleware.NewAuthMiddleware(*jwt)
 
 	app := fiber.New()
 	api.NewAuth(app, service)
-	api.NewCandidateApi(app, &serviceCandidate, *middleware)
-	api.NewVoteAPi(app, serviceVote, *middleware)
+	api.NewCandidateApi(app, candidateRepo, *middleware)
+	api.NewVoteAPi(app, voteRepo, *middleware)
 
 	app.Listen(cfg.Server.Host + ":" + cfg.Server.Port)
 }
