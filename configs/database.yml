@@ -1,8 +1,8 @@
 ---
 development:
   dialect: postgres
-  database: configs_development
-  user: postgres
-  password: postgres
+  database: vothings-db
+  user: ekokurniawan
+  password: 123456
   host: 127.0.0.1
   pool: 5
